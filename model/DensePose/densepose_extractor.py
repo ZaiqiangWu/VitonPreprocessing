@@ -39,6 +39,9 @@ from densepose.vis.extractor import (
     DensePoseResultExtractor,
     create_extractor,
 )
+from densepose.vis.densepose_results import (
+    DensePoseResultsFineSegmentationVisualizer as Visualizer,
+)
 from .apply_net import create_argument_parser, DumpAction
 
 import torch
@@ -151,6 +154,24 @@ class DensePoseExtractor(DumpAction):
         #print(labels.max())
 
         return IUV
+
+    def get_dp_map(self,img, isRGB=False):
+        if isRGB:
+            img = img[:,:,[2,1,0]] # convert to BGR
+        height,width=img.shape[:2]
+        with torch.no_grad():
+            outputs = self.predictor(img)["instances"]
+        results = DensePoseResultExtractor()(outputs)
+
+        # MagicAnimate uses the Viridis colormap for their training data
+        cmap = cv2.COLORMAP_VIRIDIS
+        # Visualizer outputs black for background, but we want the 0 value of
+        # the colormap, so we initialize the array with that value
+        arr = cv2.applyColorMap(np.zeros((height, width), dtype=np.uint8), cmap)
+        out_frame = Visualizer(alpha=1, cmap=cmap).visualize(arr, results)
+
+
+        return out_frame
 
     def IUV2img(self,IUV:np.ndarray):
         IUV=IUV.astype(np.float32)
