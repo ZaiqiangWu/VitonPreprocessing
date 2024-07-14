@@ -11,9 +11,10 @@ from tqdm import tqdm
 def main(input_video_path="./input_video.mp4", output_video_path="./output_video.mp4"):
     video_loader = MultithreadVideoLoader(input_video_path)
     video_writer = Image2VideoWriter()
+    densepose_extractor = DensePoseExtractor()
     for i in tqdm(range(len(video_loader))):
         frame = video_loader.cap()
-        out_frame = DensePoseExtractor.get_dp_map(frame,isRGB=False)
+        out_frame = densepose_extractor.get_dp_map(frame,isRGB=False)
         video_writer.append(out_frame)
     video_writer.make_video(outvid=output_video_path,fps=video_loader.fps_list[0])
 
