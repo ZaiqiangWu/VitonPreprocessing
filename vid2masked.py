@@ -10,6 +10,8 @@ from util.image2video import Image2VideoWriter
 from tqdm import tqdm
 from PIL import Image
 from util.utils_ootd import get_mask_location
+from util.image_warp import ImageReshaper,crop2_43
+
 
 category_dict = ['upperbody', 'lowerbody', 'dress']
 category_dict_utils = ['upper_body', 'lower_body', 'dresses']
@@ -30,7 +32,9 @@ def main(input_video_path="./input_video.mp4", output_video_path="./output_video
         frame = video_loader.cap()
         frame = frame[:, :, [2, 1, 0]]
         frame = Image.fromarray(frame)
-        model_img = frame.resize((768, 1024))
+        img_reshaper = ImageReshaper(frame)
+        frame_43 = img_reshaper.get_reshaped()
+        model_img = frame_43.resize((768, 1024))
         model_parse, _ = parsing_model(model_img.resize((384, 512)))
         keypoints = openpose_model(model_img.resize((384, 512)))
 
@@ -39,7 +43,8 @@ def main(input_video_path="./input_video.mp4", output_video_path="./output_video
         mask_gray = mask_gray.resize((768, 1024), Image.NEAREST)
 
         masked_vton_img = Image.composite(mask_gray, model_img, mask)
-        out_frame = np.array(masked_vton_img)[:,:,[2,1,0]]
+        raw_result = img_reshaper.back2rawSahpe(masked_vton_img)
+        out_frame = raw_result[:,:,[2,1,0]]
 
         video_writer.append(out_frame)
     video_writer.make_video(outvid=output_video_path,fps=video_loader.fps_list[0])
