@@ -158,7 +158,7 @@ def onnx_inference(session, lip_session, input_dir):
         dataset_lip = SimpleFolderDataset(root=input_dir, input_size=[473, 473], transform=transform)
         dataloader_lip = DataLoader(dataset_lip)
         with torch.no_grad():
-            for _, batch in enumerate(tqdm(dataloader_lip)):
+            for _, batch in enumerate(dataloader_lip):
                 image, meta = batch
                 c = meta['center'].numpy()[0]
                 s = meta['scale'].numpy()[0]
