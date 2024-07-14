@@ -13,6 +13,8 @@ def main(input_video_path="./input_video.mp4", output_video_path="./output_video
     video_writer = Image2VideoWriter()
     densepose_extractor = DensePoseExtractor()
     for i in tqdm(range(len(video_loader))):
+        if i>8:
+            break
         frame = video_loader.cap()
         out_frame = densepose_extractor.get_dp_map(frame,isRGB=False)
         video_writer.append(out_frame)
