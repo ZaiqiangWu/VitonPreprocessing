@@ -37,6 +37,8 @@ class ImageReshaper:
     def back2rawShapeMask(self, mask):
         raw_img = np.zeros_like(np.array(self.img))
         new_img = np.array(mask)
+        new_img=new_img[:,:,np.newaxis]
+        new_img=new_img[:,:,[0,0,0]]
         w, h = self.img.size
         raw_new_img = self.roi2raw(new_img, self.inv_trans, [h, w])
         composed = raw_img.copy()
