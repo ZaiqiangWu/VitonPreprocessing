@@ -11,8 +11,9 @@ def main(input_video,target_dir,name):
     dp_video_path = os.path.join(target_dir,'densepose',name+'.mp4')
     masked_video_path = os.path.join(target_dir, 'agnostic', name + '.mp4')
     mask_video_path = os.path.join(target_dir, 'agnostic_mask', name + '.mp4')
-    vid2densepose(input_video,dp_video_path)
+
     vid2agnostic(input_video,masked_video_path,mask_video_path)
+    vid2densepose(input_video, dp_video_path)
 
 
 
