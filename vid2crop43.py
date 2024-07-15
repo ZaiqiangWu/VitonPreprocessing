@@ -11,7 +11,7 @@ from PIL import Image
 
 
 
-def vid2densepose(input_video_path="./input_video.mp4", output_video_path="./output_video.mp4"):
+def vid2crop43(input_video_path="./input_video.mp4", output_video_path="./output_video.mp4"):
     video_loader = MultithreadVideoLoader(input_video_path)
     video_writer = Image2VideoWriter()
     densepose_extractor = DensePoseExtractor()
@@ -22,7 +22,7 @@ def vid2densepose(input_video_path="./input_video.mp4", output_video_path="./out
         img_reshaper = ImageReshaper(frame)
         frame_43 = img_reshaper.get_reshaped()
         frame=np.array(frame_43)
-        out_frame = densepose_extractor.get_dp_map(frame,isRGB=False)
+        out_frame = frame
         video_writer.append(out_frame)
     video_writer.make_video(outvid=output_video_path,fps=video_loader.fps_list[0])
 
@@ -38,4 +38,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    vid2densepose(args.input_video_path, args.output_video_path)
+    vid2crop43(args.input_video_path, args.output_video_path)
