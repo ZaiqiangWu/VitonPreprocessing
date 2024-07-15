@@ -51,7 +51,7 @@ def main(input_video_path="./input_video.mp4", output_video_path="./output_video
         video_writer.append(out_frame)
         mask_video_writer.append(raw_mask)
     video_writer.make_video(outvid=output_video_path,fps=video_loader.fps_list[0])
-    mask_video_writer.make_video(outvid=output_video_path,fps=video_loader.fps_list[0])
+    mask_video_writer.make_video(outvid='./mask.mp4',fps=video_loader.fps_list[0])
 
 
 
