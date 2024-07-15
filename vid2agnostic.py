@@ -28,8 +28,6 @@ def main(input_video_path="./input_video.mp4", output_video_path="./output_video
     openpose_model = OpenPose(gpu_id=0)
 
     for i in tqdm(range(len(video_loader))):
-        if i>8:
-            break
         frame = video_loader.cap()
         frame = frame[:, :, [2, 1, 0]]
         frame = Image.fromarray(frame)
