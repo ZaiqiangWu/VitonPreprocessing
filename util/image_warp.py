@@ -25,9 +25,18 @@ class ImageReshaper:
                                    borderValue=(0, 0, 0))
         return Image.fromarray(trans_img)
 
-    def back2rawSahpe(self, img):
+    def back2rawShape(self, img):
         raw_img = np.array(self.img)
         new_img = np.array(img)
+        w, h = self.img.size
+        raw_new_img = self.roi2raw(new_img, self.inv_trans, [h, w])
+        composed = raw_img.copy()
+        composed[self.trans_mask] = raw_new_img[self.trans_mask]
+        return composed
+
+    def back2rawShapeMask(self, mask):
+        raw_img = np.zeros_like(np.array(self.img))
+        new_img = np.array(mask)
         w, h = self.img.size
         raw_new_img = self.roi2raw(new_img, self.inv_trans, [h, w])
         composed = raw_img.copy()
