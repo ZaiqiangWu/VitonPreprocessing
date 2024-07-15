@@ -48,7 +48,7 @@ def vid2agnostic(input_video_path="./input_video.mp4", output_masked_path="./out
         raw_mask=np.array(raw_mask)
         raw_mask=raw_mask[:,:,np.newaxis]
         raw_mask=raw_mask[:,:,[0,0,0]]
-        out_frame = raw_result[:,:,[2,1,0]]
+        out_frame = np.array(raw_result)[:,:,[2,1,0]]
 
         video_writer.append(out_frame)
         mask_video_writer.append(raw_mask)
