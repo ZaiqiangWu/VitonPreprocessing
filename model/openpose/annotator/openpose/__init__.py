@@ -50,7 +50,7 @@ class OpenposeDetector:
 
         if not os.path.exists(body_modelpath):
             #from basicsr.utils.download_util import load_file_from_url
-            print(body_modelpath)
+            os.makedirs(annotator_ckpts_path,exist_ok=True)
             os.system('wget -nc -O '+body_modelpath+' '+body_model_path)
             #load_file_from_url(body_model_path, model_dir=annotator_ckpts_path)
 
