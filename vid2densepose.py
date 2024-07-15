@@ -8,7 +8,7 @@ from util.image2video import Image2VideoWriter
 from tqdm import tqdm
 
 
-def main(input_video_path="./input_video.mp4", output_video_path="./output_video.mp4"):
+def vid2densepose(input_video_path="./input_video.mp4", output_video_path="./output_video.mp4"):
     video_loader = MultithreadVideoLoader(input_video_path)
     video_writer = Image2VideoWriter()
     densepose_extractor = DensePoseExtractor()
@@ -31,4 +31,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    main(args.input_video_path, args.output_video_path)
+    vid2densepose(args.input_video_path, args.output_video_path)
