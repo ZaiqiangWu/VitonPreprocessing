@@ -2,8 +2,8 @@ import argparse
 
 import cv2
 import numpy as np
-from .vid2agnostic import vid2agnostic
-from .vid2densepose import vid2densepose
+from vid2agnostic import vid2agnostic
+from vid2densepose import vid2densepose
 import os
 
 
