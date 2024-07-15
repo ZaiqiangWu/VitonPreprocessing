@@ -3,9 +3,15 @@ import cv2
 import numpy as np
 
 
-def crop2_43(img: Image.Image):
-    img_reshaper = ImageReshaper(img)
-    return img_reshaper.get_reshaped()
+def crop2_43(img: np.ndarray) -> np.ndarray:
+    h,w=img.shape[:2]
+    if 3*h>4*w:#too tall
+        delta=h-w*4/3
+        img=img[int(delta/2):h-int(delta/2),:,:]
+    else:
+        delta = w-h*3/4
+        img = img[:,int(delta / 2):w - int(delta / 2), :]
+    return img
 
 
 class ImageReshaper:

@@ -6,7 +6,7 @@ from model.DensePose.densepose_extractor import DensePoseExtractor
 from util.multithread_video_loader import MultithreadVideoLoader
 from util.image2video import Image2VideoWriter
 from tqdm import tqdm
-from util.image_warp import ImageReshaper,crop2_43
+from util.image_warp import crop2_43
 from PIL import Image
 
 
@@ -18,10 +18,8 @@ def vid2densepose(input_video_path="./input_video.mp4", output_video_path="./out
     for i in tqdm(range(len(video_loader))):
 
         frame = video_loader.cap()
-        frame = Image.fromarray(frame)
-        img_reshaper = ImageReshaper(frame)
-        frame_43 = img_reshaper.get_reshaped()
-        frame=np.array(frame_43)
+
+        frame=crop2_43(frame)
         out_frame = densepose_extractor.get_dp_map(frame,isRGB=False)
         video_writer.append(out_frame)
     video_writer.make_video(outvid=output_video_path,fps=video_loader.fps_list[0])

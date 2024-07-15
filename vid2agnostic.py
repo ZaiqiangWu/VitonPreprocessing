@@ -10,7 +10,7 @@ from util.image2video import Image2VideoWriter
 from tqdm import tqdm
 from PIL import Image
 from util.utils_ootd import get_mask_location
-from util.image_warp import ImageReshaper,crop2_43
+from util.image_warp import crop2_43
 
 
 category_dict = ['upperbody', 'lowerbody', 'dress']
@@ -29,11 +29,12 @@ def vid2agnostic(input_video_path="./input_video.mp4", output_masked_path="./out
 
     for i in tqdm(range(len(video_loader))):
         frame = video_loader.cap()
+        frame = crop2_43(frame)
+        h,w = frame.shape[:2]
         frame = frame[:, :, [2, 1, 0]]
         frame = Image.fromarray(frame)
-        img_reshaper = ImageReshaper(frame)
-        frame_43 = img_reshaper.get_reshaped()
-        model_img = frame_43.resize((768, 1024))
+
+        model_img = frame.resize((768, 1024))
         model_parse, _ = parsing_model(model_img.resize((384, 512)))
         keypoints = openpose_model(model_img.resize((384, 512)))
 
@@ -42,8 +43,11 @@ def vid2agnostic(input_video_path="./input_video.mp4", output_masked_path="./out
         mask_gray = mask_gray.resize((768, 1024), Image.NEAREST)
 
         masked_vton_img = Image.composite(mask_gray, model_img, mask)
-        raw_result = img_reshaper.back2rawShape(masked_vton_img)
-        raw_mask = img_reshaper.back2rawShapeMask(mask)
+        raw_result = masked_vton_img.resize((w,h), Image.NEAREST)
+        raw_mask = mask.resize((w,h), Image.NEAREST)
+        raw_mask=np.array(raw_mask)
+        raw_mask=raw_mask[:,:,np.newaxis]
+        raw_mask=raw_mask[:,:,[0,0,0]]
         out_frame = raw_result[:,:,[2,1,0]]
 
         video_writer.append(out_frame)
