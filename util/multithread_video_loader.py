@@ -19,11 +19,14 @@ class MultithreadVideoLoader:
 
         self.max_height=max_height
 
-        self.buff_size=8
+        self.buff_size=64
         self.frame_queue=queue.Queue(maxsize=self.buff_size)
         self.t=Thread(target=self.load_buff,args=())
         self.t.daemon=True
         self.t.start()
+
+    def get_fps(self):
+        return self.fps_list[0]
 
 
 
@@ -42,6 +45,8 @@ class MultithreadVideoLoader:
             i+=1
         while True:
             time.sleep(1)
+            if self.stop:
+                break
 
 
     def global2local(self,i):
@@ -55,8 +60,12 @@ class MultithreadVideoLoader:
                 n_cap+=1
 
     def cap(self):
+        try:
+            result = self.frame_queue.get(timeout=1)
+        except queue.Empty:
+            result = None
 
-        return self.frame_queue.get()
+        return result
 
     def get_item(self, idx):
         n_cap,n_frame=self.global2local(idx)
@@ -86,8 +95,10 @@ class MultithreadVideoLoader:
             nframes+=n
         return nframes
 
-    def __del__(self):
+    def close(self):
         self.stop=True
+        while not self.frame_queue.empty():
+            self.frame_queue.get()
         self.t.join()
         for cap in self.cap_list:
             cap.release()
