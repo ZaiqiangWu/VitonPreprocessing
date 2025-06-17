@@ -6,4 +6,5 @@ fvcore~=0.1.5.post20221122
 tabulate~=0.9.0
 scipy~=1.9.0
 tqdm~=4.64.1
+onnxruntime
 #git+https://github.com/facebookresearch/detectron2@main#subdirectory=projects/DensePose
