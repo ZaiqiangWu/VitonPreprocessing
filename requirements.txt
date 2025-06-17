@@ -10,4 +10,5 @@ tqdm~=4.64.1
 onnxruntime
 einops
 scikit-image
+av
 #git+https://github.com/facebookresearch/detectron2@main#subdirectory=projects/DensePose
