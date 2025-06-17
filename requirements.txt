@@ -11,4 +11,6 @@ onnxruntime
 einops
 scikit-image
 av
+imageio~=2.31.3
+imageio-ffmpeg
 #git+https://github.com/facebookresearch/detectron2@main#subdirectory=projects/DensePose
