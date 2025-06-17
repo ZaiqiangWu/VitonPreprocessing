@@ -57,8 +57,8 @@ def vid2agnostic_fullbody(input_video_path="./input_video.mp4", output_masked_pa
 
 def vid2agnostic(input_video_path="./input_video.mp4", output_masked_path="./output_video.mp4",output_mask_path="./output_video.mp4"):
     video_loader = MultithreadVideoLoader(input_video_path)
-    video_writer = Image2VideoWriter()
-    mask_video_writer = Image2VideoWriter()
+    video_writer = MultithreadVideoWriter(output_masked_path,fps=video_loader.get_fps())
+    mask_video_writer = MultithreadVideoWriter(output_mask_path,fps=video_loader.get_fps())
     parsing_model = Parsing(gpu_id=0)
     openpose_model = OpenPose(gpu_id=0)
 
@@ -87,8 +87,10 @@ def vid2agnostic(input_video_path="./input_video.mp4", output_masked_path="./out
 
         video_writer.append(out_frame)
         mask_video_writer.append(raw_mask)
-    video_writer.make_video(outvid=output_masked_path,fps=video_loader.fps_list[0])
-    mask_video_writer.make_video(outvid=output_mask_path,fps=video_loader.fps_list[0])
+    video_writer.make_video()
+    video_writer.close()
+    mask_video_writer.make_video()
+    mask_video_writer.close()
 
 
 
